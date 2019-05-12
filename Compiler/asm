@@ -1,0 +1,10 @@
+LDA #0
+:ART
+ADC #1
+STA $80
+STA ($80)
+CMP #79
+BEQ #3
+JMP ART
+LDA #99
+STA $80
