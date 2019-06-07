@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define size 10
+#define size 11
 void (*com[size])(char* a);
 char* f[size];
 char* sug;
@@ -168,6 +168,12 @@ void ldx(char* a)
     imm(a,x);
 }
 
+void ldy(char* a)
+{
+    char x[]={0xA0,0xA4,0xB4,0xAC,0x00,0xBC,0x00,0x00};
+    imm(a,x);
+}
+
 void cpx(char* a)
 {
     char x[]={0xE0,0xE4,0x00,0xEC,0x00,0x00,0x00,0x00};
@@ -279,6 +285,9 @@ int main(int argc,char** args)
     
     f[9]="INX";
     com[9]=inx;
+
+    f[10]="LDY";
+    com[10]=ldx;
 
     int i;
     char* buf=malloc(64);
