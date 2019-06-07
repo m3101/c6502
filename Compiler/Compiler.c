@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#define size 6
+#define size 10
 void (*com[size])(char* a);
 char* f[size];
 char* sug;
@@ -22,6 +22,10 @@ int cof(char* a)
         put=0;
         while(a[j]!=0x0)
         {
+       	    if(a=="INX")
+       	    {
+       	        i=i;
+       	    }
             if(a[j]!=f[i][j])
                 goto next;
             if(!put)
@@ -54,7 +58,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
             case 0:
                 switch(a[i])
                 {
-                    case '#': //COM  $N
+                    case '#': //COM %N
                         if(b[0]=="0x00")
                         {
                             printf("Warning: Format \"%s\" uses immediate addressing. This mnemonic does not support it. Ignoring.\n",a);
@@ -95,7 +99,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                     }
                     
                 }
-                else if(a[i+2]==0x0) //COM $XX
+                else if(a[i+3]==0x0) //COM $XX
                 {
                     buf[0]=(char)b[1];
                     buf[1]=(char)atoi(&a[i]);
@@ -103,7 +107,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                     pc+=2;
                     return;
                 }
-                else if(a[i+2]==',') //COM $XX,X
+                else if(a[i+3]==',') //COM $XX,X
                 {
                     buf[0]=(char)b[2];
                     a[i+2]=(char)0x0;
@@ -112,19 +116,19 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                     pc+=2;
                     return;
                 }
-                else if(a[i+4]==0x0) //COM $XXXX
+                else if(a[i+5]==0x0) //COM $XXXX
                 {
                     buf[0]=(char)b[3];
-                    *(short int*)&buf[1]=atoi(&a[i]);
+                    *(short int*)&buf[1]=(short int)atoi(&a[i]);
                     fwrite(buf,3,1,out);
                     pc+=3;
                     return;
                 }
                 else //COM $XXXX,R
                 {
-                    buf[0]=a[i+5]=='X'?(char)b[4]:(char)b[5];
-                    a[i+4]=(char)0x0;
-                     *(short int*)&buf[1]=atoi(&a[i]);
+                    buf[0]=a[i+6]=='X'?(char)b[4]:(char)b[5];
+                    a[i+5]=(char)0x0;
+                     *(short int*)&buf[1]=(short int)atoi(&a[i]);
                     fwrite(buf,3,1,out);
                     pc+=3;
                     return;
@@ -139,6 +143,34 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
 void adc(char* a)
 {
     char x[]={0x69,0x65,0x75,0x6D,0x7D,0x79,0x61,0x71};
+    imm(a,x);
+}
+
+//b={immediate,zp,zpx,abs,absx,absy,indx,indy}
+
+void inx(char* a)
+{
+	char*buf=malloc(1);
+	buf[0]=(char)0xe8;
+	fwrite(buf,1,1,out);
+	pc+=1;
+}
+
+void stx(char* a)
+{
+    char x[]={0x00,0x86,0x96,0x8E,0x00,0x00,0x00,0x00};
+    imm(a,x);
+}
+
+void ldx(char* a)
+{
+    char x[]={0xA2,0xA6,0xB6,0xAE,0x00,0xBE,0x00,0x00};
+    imm(a,x);
+}
+
+void cpx(char* a)
+{
+    char x[]={0xE0,0xE4,0x00,0xEC,0x00,0x00,0x00,0x00};
     imm(a,x);
 }
 
@@ -174,13 +206,13 @@ void jmp(char* a)
     char* buf=malloc(3);
     if(a[0]=='(') //JMP ($0000)
     {
-        buf[0]=(char)0x4c;
-        *(short int*)&buf[1]=ll[lab(&a[1])];
+        buf[0]=(char)0x6c;
+        *(short int*)&buf[1]=(ll[lab(&a[1])]+0x7000);
     }
     else
     {
-        buf[0]=(char)0x6c;
-        *(short int*)&buf[1]=ll[lab(&a[0])];
+        buf[0]=(char)0x4c;
+        *(short int*)&buf[1]=(ll[lab(&a[0])]+0x7000);
     }
     fwrite(buf,3,1,out);
     pc+=3;
@@ -235,6 +267,18 @@ int main(int argc,char** args)
 
     f[5]="JMP";
     com[5]=jmp;
+    
+    f[6]="STX";
+    com[6]=stx;
+
+    f[7]="LDX";
+    com[7]=ldx;
+
+    f[8]="CPX";
+    com[8]=cpx;
+    
+    f[9]="INX";
+    com[9]=inx;
 
     int i;
     char* buf=malloc(64);

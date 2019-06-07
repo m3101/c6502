@@ -5,7 +5,9 @@
 #include "Instructions/ADC.h"
 #include "Instructions/AND.h"
 #include "Instructions/LDX.h"
+#include "Instructions/LDA.h"
 #include "Instructions/STX.h"
+#include "Instructions/STA.h"
 #include "Instructions/ASL.h"
 #include "Instructions/BCC.h"
 #include "Instructions/BCS.h"
@@ -36,8 +38,10 @@
 
 using namespace std;
 
-//By S�rgio Freitas da Silva J�nior & Lucas Santana do Nascimento Portela
+//By Sérgio Freitas da Silva Júnior
 //Development started at 00:33, April 29th 2018
+
+//This interpreter is little-endian
 
 int main(int argc, char** argv)
 {
@@ -66,10 +70,27 @@ int main(int argc, char** argv)
 	bc[0xb6]=LDX_zy;
 	bc[0xae]=LDX_abs;
 	bc[0xbe]=LDX_absy;
+
+	bc[0xa9]=LDA_im;
+	bc[0xa5]=LDA_z;
+	bc[0xb5]=LDA_zx;
+	bc[0xad]=LDA_abs;
+	bc[0xbd]=LDA_absx;
+	bc[0xb9]=LDA_absy;
+	bc[0xa1]=LDA_indx;
+	bc[0xb1]=LDA_indy;
 	
 	bc[0x86]=STX_z;
 	bc[0x96]=STX_zy;
 	bc[0x8e]=STX_abs;
+
+	bc[0x85]=STA_z;
+	bc[0x95]=STA_zx;
+	bc[0x8d]=STA_abs;
+	bc[0x9d]=STA_absx;
+	bc[0x99]=STA_absy;
+	bc[0x81]=STA_indx;
+	bc[0x91]=STA_indy;
 	
 	bc[0x29]=AND_im;
 	bc[0x25]=AND_z;

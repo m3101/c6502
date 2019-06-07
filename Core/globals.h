@@ -16,23 +16,32 @@ unsigned short PC=0x7000;
 	0xc000 ~ 0xffff		- Screen
 	*/
 
-void SetFlag(char i,bool v)
-{
-	Flags+=(-1+(2*v))*(unsigned char)(((unsigned char)Flags<<(7-i))-(v<<7))>>(7-i);
-}
-
 bool GetFlag(char i)
 {
-	return (unsigned char)((unsigned char)Flags<<(7-i))>>(7-i);
+	return Flags & 1<<(7-i);
+}
+void SetFlag(char i,bool v)
+{
+	if(!GetFlag(i))Flags=Flags|(v<<(7-i));
+	else
+	{
+		Flags-=(1<<(7-i));
+		Flags=Flags|(v<<(7-i));
+	}
+	
 }
 
 bool GetBit(unsigned char i, char a)
 {
-	return (unsigned char)((unsigned char)i<<(7-a))>>(7-a);
+	return a & (1<<(7-i));
 }
-
 void SetBit(unsigned char* f,char i, bool v)
 {
-	(*f)+=(-1+(2*v))*(unsigned char)(((unsigned char)(*f)<<(7-i))-(v<<7))>>(7-i);
+	if(!GetBit(i,*f))(*f)=(*f)|(v<<(7-i));
+	else
+	{
+		(*f)-=(1<<(7-i));
+		(*f)=(*f)|(v<<(7-i));
+	}
 }
 
