@@ -1,3 +1,7 @@
+//c6502 Interpreter
+//Copyright (C) 2019 Sérgio Freitas da Silva Jr.
+//Development started at 00:33, April 29th 2018
+
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -39,9 +43,6 @@
 
 using namespace std;
 
-//By Sérgio Freitas da Silva Júnior
-//Development started at 00:33, April 29th 2018
-
 //This interpreter is little-endian
 
 void plotmem(int s,int f,int lin)
@@ -58,9 +59,11 @@ void plotmem(int s,int f,int lin)
 
 int main(int argc, char** argv)
 {
+	printf("c6502\nCopyright (C) 2019 Sérgio Freitas da Silva Jr.\n");
+
 	if(argc<2)
 	{
-		printf("No input file. Shutting down.");
+		printf("No input file. Shutting down.\n");
 		return 0;
 	}
 	

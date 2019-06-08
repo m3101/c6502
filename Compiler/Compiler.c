@@ -1,3 +1,7 @@
+//c6502 Compiler
+//Copyright (C) 2019 Sérgio Freitas da Silva Jr.
+//Development started at 00:33, April 29th 2018
+
 #include <stdio.h>
 #include <stdlib.h>
 #define size 11
@@ -253,6 +257,7 @@ int lab(char* a)
 
 int main(int argc,char** args)
 {
+    printf("cc6502\nCopyright (C) 2019 Sérgio Freitas da Silva Jr.\n");
     f[0]="ADC";
     com[0]=adc;
 
@@ -348,7 +353,7 @@ int main(int argc,char** args)
         i=cof(buf);
         if(i==-1)
         {
-            printf("Compilation error at line \"%s %s\". Mnemonic not found (Did you mean %s?).",buf,bufb,sug);
+            printf("Compilation error at line \"%s %s\". Mnemonic not found (Did you mean %s?).\n",buf,bufb,sug);
             return -1;
         }
         com[i](bufb);
