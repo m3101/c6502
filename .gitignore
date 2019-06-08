@@ -42,6 +42,11 @@
 
 *.dump
 bc
+cc6502
+c6502
+Compiler/Tests/
+*.tbin
+*.6502
 "* Test"
 .vscode/*
 Compiler/.vscode/*

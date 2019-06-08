@@ -15,6 +15,7 @@ int la=0;
 int cof(char* a)
 {
     int i=0,j,ret=-1,sui=0,put;
+    free(sug);
     sug=malloc(15);
     for(i=0;i<size;i++)
     {
@@ -22,10 +23,6 @@ int cof(char* a)
         put=0;
         while(a[j]!=0x0)
         {
-       	    if(a=="INX")
-       	    {
-       	        i=i;
-       	    }
             if(a[j]!=f[i][j])
                 goto next;
             if(!put)
@@ -91,7 +88,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                     else //COM {$10},Y
                     {
                         buf[0]=(char)b[7];
-                        a[i+3]=(char)0x0;
+                        a[i+5]=(char)0x0;
                         buf[1]=(char)atoi(&a[i+2]);
                         fwrite(buf,2,1,out);
                         pc+=2;
@@ -102,7 +99,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                 else if(a[i+3]==0x0) //COM $XX
                 {
                     buf[0]=(char)b[1];
-                    buf[1]=(char)atoi(&a[i]);
+                    buf[1]=(char)atoi(&a[i+1]);
                     fwrite(buf,2,1,out);
                     pc+=2;
                     return;
@@ -111,7 +108,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                 {
                     buf[0]=(char)b[2];
                     a[i+2]=(char)0x0;
-                    buf[1]=atoi(&a[i]);
+                    buf[1]=atoi(&a[i+1]);
                     fwrite(buf,2,1,out);
                     pc+=2;
                     return;
@@ -119,7 +116,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                 else if(a[i+5]==0x0) //COM $XXXX
                 {
                     buf[0]=(char)b[3];
-                    *(short int*)&buf[1]=(short int)atoi(&a[i]);
+                    *(short int*)&buf[1]=(short int)atoi(&a[i+1]);
                     fwrite(buf,3,1,out);
                     pc+=3;
                     return;
@@ -128,7 +125,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                 {
                     buf[0]=a[i+6]=='X'?(char)b[4]:(char)b[5];
                     a[i+5]=(char)0x0;
-                     *(short int*)&buf[1]=(short int)atoi(&a[i]);
+                     *(short int*)&buf[1]=(short int)atoi(&a[i+1]);
                     fwrite(buf,3,1,out);
                     pc+=3;
                     return;
@@ -287,7 +284,7 @@ int main(int argc,char** args)
     com[9]=inx;
 
     f[10]="LDY";
-    com[10]=ldx;
+    com[10]=ldy;
 
     int i;
     char* buf=malloc(64);

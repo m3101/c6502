@@ -46,11 +46,11 @@ void LDA_absy(unsigned char a1, unsigned char a2)
 }
 void LDA_indx(unsigned char a1, unsigned char a2)
 {
-	A=memory[memory[(int)(a2<<8)+(int)a1+X]];
+	A=memory[memory[(int)a1+X]];
 	PC+=2;
 }
 void LDA_indy(unsigned char a1, unsigned char a2)
 {
-	A=memory[memory[(int)(a2<<8)+(int)a1]+Y];
+	A=memory[memory[(int)a1]+Y];
 	PC+=2;
 }

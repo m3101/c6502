@@ -5,6 +5,7 @@
 #include "Instructions/ADC.h"
 #include "Instructions/AND.h"
 #include "Instructions/LDX.h"
+#include "Instructions/LDY.h"
 #include "Instructions/LDA.h"
 #include "Instructions/STX.h"
 #include "Instructions/STA.h"
@@ -43,6 +44,18 @@ using namespace std;
 
 //This interpreter is little-endian
 
+void plotmem(int s,int f,int lin)
+{
+	int i,j=0;
+	for(i=s;i<f;i++)
+	{
+		if(i==PC)printf("[%2X]",memory[i]);
+		else printf("|%2X ",memory[i]);
+		if(++j==lin){printf("\n");j=0;}
+	}
+	printf("\n");
+}
+
 int main(int argc, char** argv)
 {
 	if(argc<2)
@@ -70,6 +83,12 @@ int main(int argc, char** argv)
 	bc[0xb6]=LDX_zy;
 	bc[0xae]=LDX_abs;
 	bc[0xbe]=LDX_absy;
+
+	bc[0xa0]=LDY_im;
+	bc[0xa4]=LDY_z;
+	bc[0xb4]=LDY_zy;
+	bc[0xac]=LDY_abs;
+	bc[0xbc]=LDY_absy;
 
 	bc[0xa9]=LDA_im;
 	bc[0xa5]=LDA_z;
@@ -213,11 +232,20 @@ int main(int argc, char** argv)
 	while(memory[PC]!=0)
 	{
 		printf("\rPC= %x, Registers [A,X,Y]=[%X,%X,%X]",PC,A,X,Y);
+		if(argc>2)
+		{
+			printf("\nReading %x at %x\n",memory[PC],PC-0x7000);
+			plotmem(0x00,0x60,0xA);
+			plotmem(0x7000,0x7050,0xA);
+		}
 		(bc[memory[PC]])(memory[PC+1],memory[PC+2]);
 	}
 	
 	printf("\r\nBRK interruption. Halting.\r\n");
-	
+	printf("Addresses $00 through $60\n");
+	plotmem(0x00,0x60,0xA);
+	printf("\nProgram area\n");
+	plotmem(0x7000,0x7050,0xA);
 	if(argc>2)
 	{
 		printf("Debug mode enabled. Dumping memory to out.dump\r\n");
