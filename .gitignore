@@ -40,13 +40,19 @@
 
 # End of https://www.gitignore.io/api/c++
 
+#Binaries
 *.dump
+*.tbin
+*.6502
 bc
 cc6502
 c6502
-Compiler/Tests/
-*.tbin
-*.6502
+
+#Test Files
+Compiler/Tests/*
+Exec/*
 "* Test"
+
+#vscode things
 .vscode/*
 Compiler/.vscode/*

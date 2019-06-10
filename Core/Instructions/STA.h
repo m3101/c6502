@@ -26,12 +26,12 @@ void STA_zy(unsigned char a1, unsigned char a2)
 }
 void STA_abs(unsigned char a1, unsigned char a2)
 {
-	memory[(int)(a2<<8)+(int)a1]=A;
+	memory[(int)(a1<<8)+(int)a2]=A;
 	PC+=3;
 }
 void STA_absx(unsigned char a1, unsigned char a2)
 {
-	memory[(int)(a2<<8)+(int)a1+X]=A;
+	memory[(int)(a1<<8)+(int)a2+X]=A;
 	PC+=3;
 }
 void STA_absy(unsigned char a1, unsigned char a2)

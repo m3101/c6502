@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#define size 11
+#define size 12
 void (*com[size])(char* a);
 char* f[size];
 char* sug;
@@ -52,6 +52,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
 {
     int i=0,state=0;
     char buf[3];
+    char tbuf[3];
     while(a[i]!=0x0)
     {
         switch(state)
@@ -84,7 +85,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                     {
                         buf[0]=(char)b[6];
                         a[i+2]=(char)0x0;
-                        buf[1]=(char)atoi(&a[i+2]);
+                        buf[1]=(char)strtol(&a[i+1],NULL,16);
                         fwrite(buf,2,1,out);
                         pc+=2;
                         return;
@@ -93,7 +94,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                     {
                         buf[0]=(char)b[7];
                         a[i+5]=(char)0x0;
-                        buf[1]=(char)atoi(&a[i+2]);
+                        buf[1]=(char)strtol(&a[i+1],NULL,16);
                         fwrite(buf,2,1,out);
                         pc+=2;
                         return;
@@ -103,7 +104,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                 else if(a[i+3]==0x0) //COM $XX
                 {
                     buf[0]=(char)b[1];
-                    buf[1]=(char)atoi(&a[i+1]);
+                    buf[1]=(char)strtol(&a[i+1],NULL,16);
                     fwrite(buf,2,1,out);
                     pc+=2;
                     return;
@@ -112,7 +113,7 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                 {
                     buf[0]=(char)b[2];
                     a[i+2]=(char)0x0;
-                    buf[1]=atoi(&a[i+1]);
+                    buf[1]=(char)strtol(&a[i+1],NULL,16);
                     fwrite(buf,2,1,out);
                     pc+=2;
                     return;
@@ -120,7 +121,10 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                 else if(a[i+5]==0x0) //COM $XXXX
                 {
                     buf[0]=(char)b[3];
-                    *(short int*)&buf[1]=(short int)atoi(&a[i+1]);
+                    *(short int*)&buf[1]=(short int)strtol(&a[i+1],NULL,16);
+                    tbuf[0]=buf[1];
+                    buf[1]=buf[2];
+                    buf[2]=tbuf[0];
                     fwrite(buf,3,1,out);
                     pc+=3;
                     return;
@@ -129,7 +133,10 @@ void imm(char* a, char* b) //b={immediate,zp,zpx,abs,absx,absy,indx,indy}
                 {
                     buf[0]=a[i+6]=='X'?(char)b[4]:(char)b[5];
                     a[i+5]=(char)0x0;
-                     *(short int*)&buf[1]=(short int)atoi(&a[i+1]);
+                     *(short int*)&buf[1]=(short int)strtol(&a[i+1],NULL,16);
+                    tbuf[0]=buf[1];
+                    buf[1]=buf[2];
+                    buf[2]=tbuf[0];
                     fwrite(buf,3,1,out);
                     pc+=3;
                     return;
@@ -224,6 +231,16 @@ void jmp(char* a)
     fwrite(buf,3,1,out);
     pc+=3;
 }
+
+void inte(char* a)
+{
+    char* buf=malloc(2);
+    buf[0]=(char)0x03;
+    buf[1]=(char)atoi(a);
+    fwrite(buf,2,1,out);
+    pc+=2;
+}
+
 int lab(char* a)
 {
     int i=0,j,ret=-1,sui=0,put;
@@ -291,9 +308,14 @@ int main(int argc,char** args)
     f[10]="LDY";
     com[10]=ldy;
 
+    //Nonstandard. Byte 0x03
+    f[11]="INT";
+    com[11]=inte;
+
     int i;
     char* buf=malloc(64);
     char* bufb=malloc(64);
+    sug=malloc(1);
     char** tempBuf;
     int* tempInt;
     /*for(i=0;i<argc;i++)
@@ -325,7 +347,11 @@ int main(int argc,char** args)
     int j=0;
     while(fscanf(in,"%s",buf)!=EOF)
     {
-        if(buf[0]=='#')continue;
+        if(buf[0]=='#')
+        {
+            fscanf(in,"%[^\n]\n",bufb);
+            continue;
+        }
         if(buf[0]==':')
         {
             tempBuf=malloc((la+1)*sizeof(char*));

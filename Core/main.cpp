@@ -40,6 +40,7 @@
 #include "Instructions/JMP.h"
 #include "Instructions/JSR.h"
 #include "Instructions/RTS.h"
+#include "Extensions/Ext.h"
 
 using namespace std;
 
@@ -206,6 +207,8 @@ int main(int argc, char** argv)
 	bc[0x20]=JSR_abs;
 	
 	bc[0x60]=RTS;
+
+	bool ext=extend(bc,memory);
 	
 	//End of pointer-setting section
 	
@@ -241,6 +244,7 @@ int main(int argc, char** argv)
 			plotmem(0x00,0x60,0xA);
 			plotmem(0x7000,0x7050,0xA);
 		}
+		if(ext)extstep(bc,memory);
 		(bc[memory[PC]])(memory[PC+1],memory[PC+2]);
 	}
 	
