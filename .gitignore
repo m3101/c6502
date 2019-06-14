@@ -47,11 +47,13 @@
 bc
 cc6502
 c6502
+c6502.lbin
 
 #Test Files
 Compiler/Tests/*
 Exec/*
 "* Test"
+Success
 
 #vscode things
 .vscode/*

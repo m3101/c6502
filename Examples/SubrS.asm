@@ -1,0 +1,18 @@
+#Simple Subroutine test example
+
+JMP STO
+
+:STR
+LDX #79
+STX $3000
+LDX #75
+STX $3001
+LDX #10
+STX $3002
+INT 00
+RTS #
+
+:STO
+JSR STR
+JSR STR
+JSR STR

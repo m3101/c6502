@@ -37,6 +37,6 @@ INX #1
 STX $00
 
 #Se_j=5_quebramos_o_loop
-CPX #05
+CPX #10
 BEQ #03
 JMP LOP

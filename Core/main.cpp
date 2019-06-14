@@ -12,6 +12,7 @@
 #include "Instructions/LDY.h"
 #include "Instructions/LDA.h"
 #include "Instructions/STX.h"
+#include "Instructions/STY.h"
 #include "Instructions/STA.h"
 #include "Instructions/ASL.h"
 #include "Instructions/BCC.h"
@@ -49,11 +50,14 @@ using namespace std;
 void plotmem(int s,int f,int lin)
 {
 	int i,j=0;
+	printf("    ");
+	for(i=s;i<s+lin;i++)printf("|%2X ",i-s);
+	printf("\n%4X",i);
 	for(i=s;i<f;i++)
 	{
 		if(i==PC)printf("[%2X]",memory[i]);
 		else printf("|%2X ",memory[i]);
-		if(++j==lin){printf("\n");j=0;}
+		if(++j==lin){printf("\n%4X",i);j=0;}
 	}
 	printf("\n");
 }
@@ -106,6 +110,10 @@ int main(int argc, char** argv)
 	bc[0x86]=STX_z;
 	bc[0x96]=STX_zy;
 	bc[0x8e]=STX_abs;
+
+	bc[0x84]=STY_z;
+	bc[0x94]=STY_zx;
+	bc[0x8c]=STY_abs;
 
 	bc[0x85]=STA_z;
 	bc[0x95]=STA_zx;
@@ -234,6 +242,8 @@ int main(int argc, char** argv)
 	printf("\r\nClosing file...\r\n");
 	fil.close();
 
+	int bp=PS;
+	int n=0;
 	//Here starts the sorcery
 	while(memory[PC]!=0)
 	{
@@ -241,8 +251,21 @@ int main(int argc, char** argv)
 		if(argc>2)
 		{
 			printf("\nReading %x at %x\n",memory[PC],PC-0x7000);
-			plotmem(0x00,0x60,0xA);
+			plotmem(0x19f,0x1ff,0xA);
 			plotmem(0x7000,0x7050,0xA);
+			if(argc>3 &&((PC==bp)||n))
+			{
+				printf("ADB ON\n");
+				n=0;
+				while((b=getchar())=='\n'){}
+				if(b=='b')
+				{
+					scanf("%X",&bp);
+					if(bp==-1)bp=PS;
+					//bp+=PS;
+				}
+				else if(b=='n')n=1;
+			}
 		}
 		if(ext)extstep(bc,memory);
 		(bc[memory[PC]])(memory[PC+1],memory[PC+2]);

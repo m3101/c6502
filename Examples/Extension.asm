@@ -4,13 +4,14 @@
 
 :WAT
 INT 11
-LDX $2000
 
 #Writes whatever was the first character to be written
+LDX $2000
 STX $3000
 LDX #10
 STX $3001
 INT 00
+LDX $2000
 
 #Compares X to "Q"
 CPX #81
