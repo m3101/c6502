@@ -1,5 +1,5 @@
 //c6502 Compiler
-//Copyright (C) 2019 Sérgio Freitas da Silva Jr.
+//Copyright (C) 2019 Amélia O. F. da S.
 //Development started at 00:33, April 29th 2018
 
 #include <stdio.h>
@@ -369,7 +369,7 @@ int lab(char* a)
 
 int main(int argc,char** args)
 {
-    printf("cc6502\nCopyright (C) 2019 Sérgio Freitas da Silva Jr.\n");
+    printf("cc6502\nCopyright (C) 2019 Amélia O. F. da S.\n");
 
     sli=0;
     sle=0;

@@ -1,5 +1,5 @@
 install:
-	@echo "c6502, by Sérgio F. Jr."
+	@echo "c6502, by Amélia O. F. da S."
 	@make cc6502
 	@make c6502
 debug:

@@ -1,6 +1,6 @@
 # c6502, a simple, straightforward 6502 simulator
 
-## By Sérgio Freitas da Silva Jr.
+## By Amélia O. F. da S.
 
 ---
 

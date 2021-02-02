@@ -1,5 +1,5 @@
 //c6502 Interpreter
-//Copyright (C) 2019 Sérgio Freitas da Silva Jr.
+//Copyright (C) 2019 Amélia O. F. da S.
 //Development started at 00:33, April 29th 2018
 
 #include <iostream>
@@ -64,7 +64,7 @@ void plotmem(int s,int f,int lin)
 
 int main(int argc, char** argv)
 {
-	printf("c6502\nCopyright (C) 2019 Sérgio Freitas da Silva Jr.\n");
+	printf("c6502\nCopyright (C) 2019 Amélia O. F. da S.\n");
 
 	if(argc<2)
 	{
